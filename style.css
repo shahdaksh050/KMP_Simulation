@@ -1,0 +1,105 @@
+body 
+{
+    background-color: #1e1b2f;
+    color: #f0f0f0;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.container 
+{
+    max-width: 900px;
+}
+
+.card 
+{
+    background-color: #2a2540;
+    border: none;
+    color: #ffffff;
+}
+
+input.form-control 
+{
+    background-color: #372f57;
+    border: 1px solid #5e548e;
+    color: #f0f0f0;
+}
+
+input.form-control::placeholder 
+{
+    color: #b0a8d3;
+}
+
+.btn-success 
+{
+    background-color: #5e548e;
+    border-color: #5e548e;
+}
+
+.btn-success:hover 
+{
+    background-color: #7265a8;
+    border-color: #7265a8;
+}
+
+.highlight-box span,
+.lps-box span 
+{
+    display: inline-block;
+    margin: 4px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 17px;
+    transition: background 0.3s ease;
+}
+
+.highlight 
+{
+    background-color: #ffc857;
+    color: #000;
+}
+
+.match 
+{
+    background-color: #06d6a0;
+    color: white;
+}
+
+.mismatch 
+{
+    background-color: #ef476f;
+    color: white;
+}
+
+.lps-box span 
+{
+    background-color: #5e548e;
+    color: white;
+}
+
+.title 
+{
+    color: #c77dff;
+    font-weight: bold;
+}
+
+#textLine, #patternLine 
+{
+    min-height: 1.5em;
+}
+
+.highlight-box 
+{
+    background-color: #302a4d;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 0 10px rgba(199, 125, 255, 0.2);
+}
+.footer 
+{
+    background-color: #2a2540;
+    color: #c77dff;
+    font-weight: 500;
+    font-size: 16px;
+    border-top: 1px solid #5e548e;
+}
