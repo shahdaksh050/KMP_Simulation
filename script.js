@@ -2,8 +2,7 @@ let currentIteration = 0;
 let iterations = [];
 let timeoutId = null;
 
-function startKMP() 
-{
+function startKMP() {
     const text = document.getElementById('textInput').value;
     const pattern = document.getElementById('patternInput').value;
     const visualArea = document.getElementById('visualArea');
@@ -17,8 +16,7 @@ function startKMP()
     currentIteration = 0;
     iterations = [];
 
-    if (!text || !pattern) 
-    {
+    if (!text || !pattern) {
         infoPanel.innerHTML = '<div class="alert alert-danger">Please enter both text and pattern!</div>';
         return;
     }
@@ -28,10 +26,9 @@ function startKMP()
 
     let i = 0;
     let j = 0;
-    let foundIndex = -1;
+    const foundIndexes = [];
 
-    while (i < text.length) 
-    {
+    while (i < text.length) {
         const currentState = {
             textPos: i,
             patternPos: j,
@@ -43,42 +40,38 @@ function startKMP()
             index: -1
         };
 
-        iterations.push({...currentState});
+        iterations.push({ ...currentState });
 
-        if (pattern[j] === text[i]) 
-        {
+        if (pattern[j] === text[i]) {
             i++;
             j++;
         }
 
-        if (j === pattern.length) 
-        {
-            foundIndex = i - j;
+        if (j === pattern.length) {
+            const foundIndex = i - j;
+            foundIndexes.push(foundIndex);
             iterations.push({
                 ...currentState,
                 found: true,
                 index: foundIndex
             });
-            break;
-        }
-        else if (i < text.length && pattern[j] !== text[i]) 
-        {
+            j = lps[j - 1]; // Reset j to search for subsequent matches
+        } else if (i < text.length && pattern[j] !== text[i]) {
             if (j !== 0) j = lps[j - 1];
             else i++;
         }
     }
 
-    showNextIteration(foundIndex);
+    showNextIteration(foundIndexes);
 }
 
-function showNextIteration(foundIndex) 
-{
-    if (currentIteration >= iterations.length) 
-    {
+function showNextIteration(foundIndexes) {
+    if (currentIteration >= iterations.length) {
         const infoPanel = document.getElementById('infoPanel');
-        infoPanel.innerHTML = foundIndex >= 0 
-            ? `<div class="alert alert-success">Pattern found at index ${foundIndex}!</div>`
-            : '<div class="alert alert-danger">Pattern not found in the text!</div>';
+        const indexesMessage = foundIndexes.length > 0 
+            ? `Pattern found at index(es): ${foundIndexes.join(', ')}`
+            : 'Pattern not found in the text!';
+        infoPanel.innerHTML = `<div class="alert alert-${foundIndexes.length > 0 ? 'success' : 'danger'}">${indexesMessage}</div>`;
         return;
     }
 
@@ -108,39 +101,33 @@ function showNextIteration(foundIndex)
 
     const controls = document.createElement('div');
     controls.innerHTML = `
-        <button class="btn btn-primary me-2" onclick="showNextIteration(${foundIndex})">Next Step</button>
-        <button class="btn btn-success" onclick="autoPlay(${foundIndex})">Auto Play</button>
+        <button class="btn btn-primary me-2" onclick="showNextIteration(${JSON.stringify(foundIndexes)})">Next Step</button>
+        <button class="btn btn-success" onclick="autoPlay(${JSON.stringify(foundIndexes)})">Auto Play</button>
     `;
 
     visualArea.append(iterationInfo, textDisplay, patternDisplay, controls);
     currentIteration++;
 }
 
-function autoPlay(foundIndex) 
-{
+function autoPlay(foundIndexes) {
     if (timeoutId) clearTimeout(timeoutId);
     if (currentIteration >= iterations.length) return;
-    
-    showNextIteration(foundIndex);
-    timeoutId = setTimeout(() => autoPlay(foundIndex), 1000);
+
+    showNextIteration(foundIndexes);
+    timeoutId = setTimeout(() => autoPlay(foundIndexes), 1000);
 }
 
-function computeLPSArray(pattern) 
-{
+function computeLPSArray(pattern) {
     const lps = new Array(pattern.length).fill(0);
     let len = 0;
     let i = 1;
 
-    while (i < pattern.length) 
-    {
-        if (pattern[i] === pattern[len]) 
-        {
+    while (i < pattern.length) {
+        if (pattern[i] === pattern[len]) {
             len++;
             lps[i] = len;
             i++;
-        } 
-        else 
-        {
+        } else {
             if (len !== 0) len = lps[len - 1];
             else lps[i++] = 0;
         }
