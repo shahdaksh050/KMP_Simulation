@@ -6,7 +6,7 @@ function runKMP() {
     const lps = computeLPSArray(pattern);
     let i = 0;
     let j = 0;
-    let iterations = [];
+    let found = false;
     
     while (i < text.length) {
         if (pattern[j] === text[i]) {
@@ -14,8 +14,9 @@ function runKMP() {
             j++;
         }
         if (j === pattern.length) {
-            iterations.push(`Pattern found at index ${i - j}`);
-            j = lps[j - 1];
+            output.innerHTML = `Pattern found at index ${i - j}`;
+            found = true;
+            break;  // Terminate as soon as the pattern is found
         } else if (i < text.length && pattern[j] !== text[i]) {
             if (j !== 0) {
                 j = lps[j - 1];
@@ -25,9 +26,7 @@ function runKMP() {
         }
     }
 
-    if (iterations.length > 0) {
-        output.innerHTML = `Pattern found at: ${iterations.join('<br>')}`;
-    } else {
+    if (!found) {
         output.innerHTML = "Pattern not found!";
     }
 }
